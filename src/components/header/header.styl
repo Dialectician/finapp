@@ -1,151 +1,29 @@
-$localFont()
-  $font-numbers()
-  font-size 16px
-  font-weight bold
-  letter-spacing .5px
-  text-transform uppercase
-
-  @media $after768
-    font-size 16px
-    line-height 1.2rem
-
 .header
+  z-index 2
   overflow hidden
-  z-index 3
   position fixed
   left 0
   top 0
+  display flex
+  align-items center
+  justify-content space-between
   width 100%
-  height $header-height-mobile
-  border-bottom 1px solid black
-  background $color-header-bg
+  height 56px
+  padding 0 $m8
+  padding-right 0
+  background var(--header-bg)
+  border-bottom 1px solid var(--modal-border-1)
 
-  @media $after768
-    height $header-height
-
-  &__in
-    overflow hidden
+  &__right
     display flex
-    justify-content flex-start
-    flex-flow row nowrap
-    align-items center
-    min-height 49px
-    max-width 1255px
-    padding 0 $mss
 
-    @media $before768
-      justify-content space-between
-
-    @media $after768
-      padding 0 75px 0 30px
-
-  &__col
-    display flex
-    align-items center
-    justify-content space-between
-    white-space nowrap
-
-    @media $after768
-      justify-content center
-
-    &._left
-      @media $after768
-        flex 0 0 290px
-        margin-left -30px
-        margin-right 60px
-        padding 0 10px
-        justify-content space-between
-
-    &._date
-      @media $after768
-        width 120px
-        justify-content flex-start
-
-    &:last-child
-      @media $after768
-        margin-right -10px
-        justify-content flex-end
-        margin-left auto
-
-  &__date
-    min-width 100px
-    color $color-white
-    text-align center
-    $localFont()
-
-  &__periodItem
-    display flex
-    align-items center
-    position relative
-    padding $m $m
-    color $color-grey
-    $localFont()
+  &__action
+    font-size 22px
+    padding $mn $m7
+    color var(--c-text-second)
 
     &:active
-      @media $before768
-        background $color-sidebar-bg-hover
-        color $color-white
+      background var(--sidebar-bg)
 
     &._active
-      color $color-white
-
-  &__link
-    display flex
-    align-items center
-    position relative
-    cursor pointer
-    height 56px
-    padding $mm $ms
-    color $color-grey
-    $localFont()
-    anim()
-
-    @media $after400
-      padding $mm $mm
-
-    @media $after768
-      height 49px
-      padding $m $mm
-
-    &:active
-      @media $before768
-        background $color-sidebar-bg-hover
-        color $color-white
-
-    &:hover
-      @media $after768
-        background $color-sidebar-bg-hover
-        color $color-white
-
-    &._extraPadding
-      padding 15px 20px
-
-    &._wide
-      @media $after768
-        padding $m $m
-
-    &._active
-      color $color-white
-
-    &._disabled
-      cursor default
-      opacity .1
-
-    &._disabled:hover
-      background none
-
-    &._plus
-      padding $mm
-      color white
-
-    .mdi
-      font-size 22px
-
-      @media $after768
-        font-size 20px
-
-    .fa
-      font-size 20px
-
-      @media $after768
-        font-size 16px
+      color var(--c-text-main)

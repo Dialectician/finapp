@@ -1,0 +1,14 @@
+.appName
+  typo-appName()
+
+  &._small
+    typo-appName('small')
+
+  &:first-letter
+    color var(--btn-red-background)
+
+  &:not(:first-child)
+    margin-top $m9
+
+    @media $media-laptop
+      margin-top $mb1

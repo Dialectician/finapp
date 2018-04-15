@@ -1,15 +1,13 @@
-import moment from 'moment'
 import Vue from 'vue'
-import VueShortkey from 'vue-shortkey'
+import moment from 'moment'
 import Notifications from 'vue-notification'
-import VTooltip from 'v-tooltip'
-import velocity from 'velocity-animate'
 import store from '@/store/store'
-import formatDate from '@/filters/date'
-import App from '@/components/App.vue'
+import App from '@components/app/App.vue'
+import toogleBodyOverflow from '@/plugins/toogleBodyOverflow'
 import '@/sw.js'
 
 Vue.config.productionTip = false
+
 moment.locale('en')
 moment.updateLocale('en', {
   week: {
@@ -17,14 +15,11 @@ moment.updateLocale('en', {
   }
 })
 
-// Filters
-Vue.filter('date', formatDate)
-
 // Plugins
-Vue.use(VueShortkey)
-Vue.use(Notifications, { velocity })
-Vue.use(VTooltip, { enabled: window.innerWidth > 768 })
+Vue.use(Notifications)
+Vue.use(toogleBodyOverflow)
 
+// Init application
 /* eslint-disable no-new */
 new Vue({
   el: '.app',

@@ -1,0 +1,24 @@
+.emptyInfo
+  display flex
+  flex-flow column nowrap
+  align-items center
+  justify-content center
+
+  &__wrap
+    display flex
+    flex-flow column nowrap
+    flex-grow 1
+
+  &__image
+    margin-bottom 32px
+    font-size 66px
+    color var(--color-incomes)
+
+    @media $media-laptop
+      font-size @font-size * 1.5
+
+  &__text
+    margin-bottom 38px
+
+    &:last-child
+      margin-bottom 0

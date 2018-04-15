@@ -2,10 +2,16 @@ const gulp = require('gulp')
 const swPrecache = require('sw-precache')
 const paths = require('../../config/paths')
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
 function writeServiceWorkerFile(handleFetch, callback) {
   swPrecache.write(`${paths.dist}/service-worker.js`, {
-    staticFileGlobs: [paths.dist + '/**/*.{js,css,png,jpg,gif,svg,eot,ttf,woff}'],
+    staticFileGlobs: [paths.dist + '/**/*.{html,js,css,png,jpg,gif,svg,eot,ttf,woff}'],
     stripPrefix: paths.dist,
+    // skipWaiting: true,
+
+    replacePrefix: isDevelopment ? '' : '/next',
+
     // If handleFetch is false (i.e. because this is called from generate-service-worker-dev), then
     // the service worker will precache resources but won't actually serve them.
     // This allows you to test precaching behavior without worry about the cache preventing your
@@ -22,9 +28,6 @@ function writeServiceWorkerFile(handleFetch, callback) {
       handler: 'cacheFirst'
     }, {
       urlPattern: /^https:\/\/cdn\.materialdesignicons\.com\//,
-      handler: 'cacheFirst'
-    }, {
-      urlPattern: /^https:\/\/cdn\.cloudflare\.com\//,
       handler: 'cacheFirst'
     }]
   }, callback)

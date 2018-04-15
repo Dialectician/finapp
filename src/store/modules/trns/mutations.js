@@ -1,17 +1,22 @@
+import Vue from 'vue'
+
 export default {
-  setTrns(state, trns) {
-    state.all = trns
+  addTrnToStore(state, payload) {
+    Vue.set(state.trns, [payload.id], payload.data)
   },
-  addTrn(state, trn) {
-    state.all.unshift(trn)
+
+  updateTrnToStore(state, payload) {
+    state.trns[payload.id] = payload.data
   },
-  updateTrn(state, trn) {
-    state.all = [
-      trn,
-      ...state.all.filter(t => t.id !== trn.id)
-    ]
+
+  addOrUpdateTrnsToStore(state, trns) {
+    state.trns = trns
+    // for (const key in trns) {
+    //   state.trns[key] = trns[key]
+    // }
   },
-  deleteTrn(state, id) {
-    state.all = state.all.filter(t => t.id !== id)
+
+  delereTrnFromStore(state, id) {
+    Vue.delete(state.trns, id)
   }
 }

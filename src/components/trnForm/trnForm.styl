@@ -1,215 +1,114 @@
-.rightBar
-  z-index 3
+.trnForm
+  z-index 2
   position fixed
-  right 0
-  top 0
-  width 0
-  height 100vh
+  left 0
+  bottom 0
+  width 100%
+  height auto
 
-  &._active
-    visibility visible
-
-    @media $before768
-      width 100%
-
-  &__wrap
-    z-index 2
+  &__overflow
     position fixed
-    top 0
-    right 0
-    width 290px
-    height 100%
-    background $color-sidebar
-    border-left 1px solid black
-    transform translateX(300px)
-    transition all .4s cubic-bezier(0.17, 0.04, 0.03, 0.94)
-    box-shadow 0 0 15px black
-
-    ^[0]._active &
-      transform translateX(0)
-
-  &__overlay
-    @media $before768
-      z-index 1
-      visibility hidden
-      opacity 0
-      position fixed
-      left 0
-      top 0
-      width 100%
-      height 100%
-      background alpha(black, .9)
-      transition all 400ms ease
-
-      ^[0]._active &
-        visibility visible
-        opacity 1
-
-  &__in
-    z-index 2
-    position relative
-    height 100%
-    background $color-sidebar
-
-    @media (min-width: 768px)
-      width 290px
-
-  &__iconsPop
-    overflow hidden
-    overflow-y auto
-    height calc(100% - 140px)
-    scrollbar()
-
-    @media (min-width: 768px)
-      height calc(100% - 160px)
-
-  &__parentCategoryPop
-    overflow hidden
-    overflow-y auto
-    height calc(100vh - 100px)
-    scrollbar()
-
-    @media (min-width: 768px)
-      height calc(100vh - 100px)
-
-  &__main
-    overflow hidden
-    overflow-y auto
-    height calc(100% - 40px)
-    scrollbar()
-
-    @media (min-width: 768px)
-      height calc(100% - 80px)
-
-    &__close
-      position absolute
-      right 20px
-      top 0px
-      font-size 4rem
-      transform rotate(45deg)
-
-      @media (min-width: 768px)
-        display none
-
-    &__in
-      padding 20px 20px
-      padding-top 20px
-
-      @media (min-width: 768px)
-        padding 40px 30px
-        padding-top 20px
-
-  &__icons
-    margin-bottom 50px
-
-  &__categories
-    overflow hidden
-    overflow-y scroll
-    position absolute
     left 0
-    top 0
+    bottom 0
     width 100%
     height 100%
-    background $color-sidebar
+    background var(--modal-overflow-bg)
+
+  &__wrap
+    max-width 420px
+    margin-left auto
+    position relative
+    flex-grow 1
+    display flex
+    flex-flow column nowrap
+    background var(--main-bg)
+
+  &__scroll
+    max-height 96vh
+    overflow hidden
+    overflow-y auto
     scrollbar()
-
-    &__in
-      overflow-y scroll
-      height 100%
-      padding 30px 17px
-      scrollbar()
-
-      @media (min-width: 768px)
-        padding 58px 60px
 
   &__header
     display flex
+    justify-content space-between
+
+  &__headerItem
+    position relative
+    display flex
     align-items center
-    justify-content space-between
-    margin-bottom 30px
-    padding-bottom 7px
-    border-bottom 1px solid $color-line-account
+    flex-grow 1
+    padding $m8 $m8
+    width 50%
+    background var(--trnForm-header-bg)
+    border-bottom 1px solid var(--trnForm-header-border)
+    border-left 1px solid transparent
 
-    &__close
-      margin-top -5px
+    &:active
+      opacity .9
 
-  &__filter
-    display flex
-    margin-bottom 30px
+    &:last-child
+      border-left-color var(--trnForm-header-border)
 
-  &__date
-    display flex
-    margin-bottom 30px
-    justify-content space-between
-    align-items center
-    font-size 1rem
+  &__icon
+    position absolute
+    right $m7
+    top (- $mn1)
 
-    &__value
-      min-width 60px
-      display flex
-      align-items center
-      justify-content center
-      padding-left 15px
-      text-transform uppercase
-      font-size 1.6rem
-      font-weight bold
-      $font-numbers()
-      @media (min-width: 768px)
-        min-width 160px
+  &__total
+    padding-top $m5
 
-      &__in
-        padding-left 10px
+    .amount__wrap
+      justify-content flex-start
+      color var(--trnForm-header-color)
 
-    &__link
-      margin-top -3px
-      padding 10px 30px
-      opacity .5
-      border none
-      color $color-main
-      cursor pointer
-      anim()
+    .amount__wrap._small
+      display none
 
-      ^[1]:hover &
-        opacity 1
-        background alpha(white, .3)
-        border-radius 3px
+  &__name
+    font-size 20px
+    color var(--trnForm-header-color)
 
-  &__subTitle
-    display flex
-    align-items flex-end
-    justify-content space-between
-    padding 0 5px
-    font-size .8rem
-    font-weight bold
-    letter-spacing 1px
-    padding-bottom 15px
-    text-transform uppercase
-
-    .name
-      font-size 1rem
-
-  &__desc
-    margin-top -20px
-    height 70px
-
-  &__actions__btn
-    display block
-    padding 20px 80px
-    color $color-main
-    font-size 1rem
-    font-weight bold
-    text-transform uppercase
-    letter-spacing 2px
+  &__selectedDate
+    padding $m6 $m9
     text-align center
-    background $color-line
-    border 1px solid transparent
-    border-radius 3px
-    cursor pointer
-    anim()
 
-    @media (min-width: 1200px)
-      display inline-flex
+.trnFormAmount
+  padding $m9
+  text-align right
 
-    &:hover
-      color $color-link
-      border-color $color-link
+  &:active
+    background var(--trnForm-amount-activr-bg)
+
+  &._expenses
+    color var(--color-expenses)
+
+  &._incomes
+    color var(--color-incomes)
+
+  &__type
+    align-self center
+    padding-bottom $m6
+
+  &__value
+    width 100%
+    overflow hidden
+    overflow-x auto
+    scrollbar()
+    display block
+    align-self center
+    justify-self center
+    typo-money()
+    padding 0
+    font-weight 500
+    font-size 42px
+    line-height 32px
+    background none
+    border none
+    text-align right
+
+    ^[0]._expenses &
+      color var(--color-expenses)
+
+    ^[0]._incomes &
+      color var(--color-incomes)

@@ -7,11 +7,12 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const paths = require('../config/paths')
 
 module.exports = merge(baseWebpackConfig, {
-  entry: {
-    app: paths.js.entry
-  },
+  entry: [
+    'babel-polyfill',
+    paths.js.entry
+  ],
 
-  devtool: false,
+  devtool: '#cheap-module-eval-source-map',
 
   output: {
     path: paths.js.output,
@@ -64,8 +65,6 @@ module.exports = merge(baseWebpackConfig, {
     new UglifyJsPlugin({
       sourceMap: false,
       uglifyOptions: {
-        ie8: false,
-        ecma: 8,
         output: {
           comments: false,
           beautify: false

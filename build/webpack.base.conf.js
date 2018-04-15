@@ -7,7 +7,8 @@ module.exports = {
     extensions: ['.js', '.vue'],
     alias: {
       '@': path.join(__dirname, '../src'),
-      '@components': path.join(__dirname, '../src/components')
+      '@components': path.join(__dirname, '../src/components'),
+      'node_modules': path.join(__dirname, '../node_modules')
     }
   },
 
@@ -19,6 +20,9 @@ module.exports = {
       test: /\.js$/,
       use: 'babel-loader',
       include: paths.app
+    }, {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader']
     }]
   },
 
@@ -26,7 +30,7 @@ module.exports = {
     new HtmlWebpackIncludeAssetsPlugin({
       assets: { path: 'css', glob: '*.css', globPath: paths.css.output },
       append: true,
-      publicPath: '/',
+      publicPath: '',
       hash: false
     })
   ]

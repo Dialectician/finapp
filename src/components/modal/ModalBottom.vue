@@ -1,13 +1,21 @@
 <template lang="pug">
-.modalBottom(:class="{ _active: isShow }")
-  .modalBottom__overlay(@click.stop="$listeners.onClose")
+.modalBottom(@click.stop.prevent="")
+  transition(name="fadeIn")
+    template(v-if="isShow && showOverflow")
+      .modalBottom__overflow(
+        @click="closeModal()"
+      )
 
-  transition(name="slideToBottom")
+  transition(name="animModal")
     template(v-if="isShow")
-      .modalBottom__wrap
-        .modalBottom__title {{ title }}
-        .modalBottom__content
-          slot
+      .modalBottom__wrap(
+        :style="{ height: `${maxHeight}px` }"
+      )
+        template(v-if="showOverflow")
+          slot(name="header")
+
+        .modalBottom__scroll
+          slot(name="content")
 </template>
 
 <script>
@@ -15,33 +23,21 @@ export default {
   props: {
     isShow: {
       type: Boolean,
-      required: true
+      default: false
     },
-    title: {
-      type: String,
-      required: true
+    maxHeight: {
+      type: [Number, Boolean],
+      default: null
+    },
+    showOverflow: {
+      type: Boolean,
+      default: false
     }
-  },
-
-  watch: {
-    isShow() {
-      this.toogleBodyOverflow()
-    }
-  },
-
-  mounted() {
-    // this.toogleBodyOverflow()
   },
 
   methods: {
-    toogleBodyOverflow() {
-      console.log(1)
-      const body = document.querySelector('body')
-      if (this.isShow) {
-        body.classList.add('_overflowNew')
-      } else {
-        body.classList.remove('_overflowNew')
-      }
+    closeModal() {
+      this.$listeners.onClose()
     }
   }
 }

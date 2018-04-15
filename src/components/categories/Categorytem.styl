@@ -1,0 +1,31 @@
+.categoryItem
+  border-radius 3px
+  display flex
+  flex-flow column nowrap
+  align-items center
+  justify-content center
+  flex 1 0 30%
+  margin $m3
+  padding-top $m4
+  padding-bottom $m7
+  color var(--cat-color-main)
+
+  &__content-name
+    overflow hidden
+    text-overflow ellipsis
+    max-width calc(100vw / 3 - 25px)
+    padding 0 $m4
+    padding-bottom $m5
+    text-align center
+
+    &:last-child
+      padding-bottom 0
+
+  &__content-child
+    display flex
+    align-items center
+    justify-content center
+
+  &__amount
+    padding 0 $m4
+    padding-top $m3

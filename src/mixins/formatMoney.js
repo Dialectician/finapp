@@ -2,8 +2,8 @@ import accounting from '../libs/accounting.min'
 
 accounting.settings = {
   currency: {
-    symbol: '₽',
-    format: '%v %s',
+    symbol: '',
+    format: '%v',
     decimal: '.',
     thousand: ' ',
     precision: 0
@@ -19,6 +19,8 @@ const getSymbol = (currency) => {
   switch (currency) {
     case 'USD':
       return '$'
+    case 'RUB':
+      return '₽'
     case 'EUR':
       return '€'
     case 'IDR':
@@ -26,20 +28,21 @@ const getSymbol = (currency) => {
     case 'THB':
       return '฿'
     default:
-      return '₽'
+      return ''
   }
 }
 
-const mixin = {
+export default {
   methods: {
     formatMoney(sum, currency) {
-      if (!currency || currency === 'RUB') {
-        return accounting.formatMoney(sum)
+      if (currency) {
+        const symbol = getSymbol(currency)
+        return {
+          price: accounting.formatMoney(sum),
+          symbol: symbol
+        }
       }
-      const symbol = getSymbol(currency)
-      return accounting.formatMoney(sum, { symbol })
+      return {}
     }
   }
 }
-
-export default mixin

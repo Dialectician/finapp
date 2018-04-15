@@ -1,0 +1,29 @@
+.trnsList
+  margin-bottom $mb1
+
+  &:last-child
+    margin-bottom 0
+
+  &__day
+    overflow hidden
+    margin $m7 $m7
+    border 1px solid var(--group-border)
+    border-radius $m3
+
+    &:last-child
+      margin-bottom 0
+
+  &__header
+    display flex
+    align-items center
+    justify-content space-between
+    padding $m7 $m8
+    background var(--date-background)
+
+  &__date
+    flex-grow 1
+
+  &__trns
+    padding $m8 $m8
+    background var(--trns-list-bg)
+    border-top 1px solid var(--group-border)

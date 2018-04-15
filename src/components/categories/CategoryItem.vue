@@ -1,127 +1,116 @@
-<template lang="pug">
-div(:class="className" @click.prevent.stop="$emit('onClickContent', category)")
-  //- Parent
-  //------------------------------------------------
-  template(v-if="category.parentId === 0")
-    //- content
-    .itemList__content
-      .itemList__icon(@click.prevent.stop="onClickIcon()")
-        .icon(
-          :class="{ _link: view !== 'trnForm' }"
-          :style="`background: ${category.color}`"
-        )
-          .icon__pic: div(:class="category.icon")
-
-      .itemList__name
-        div {{ category.name }}
-        .itemList__name__list.fa.fa-list(v-if="category.child && category.child.length")
-
-      template(v-if="view !== 'trnForm'")
-        .itemList__actions
-          .itemList__action(
-            @click.prevent.stop="$emit('toogleEditCategory', category.id)"
-          )
-            template(v-if="editCategoryId === category.id")
-              .fa.fa-times-circle
-            template(v-else)
-              .fa.fa-pencil-square-o
-
-          .itemList__action(@click.prevent.stop="$emit('confirmPop', category.id)")
-            .fa.fa-trash-o
-
-    //- Confirm
-    template(v-if="confirmPopCategoryId === category.id")
-      slot(name="confirm")
-
-    //- Child
-    template(v-if="category.child && category.child.length")
-      template(v-if="showedChildIds.indexOf(category.id) !== -1")
-        .itemList__child
-          slot(name="child")
-
-
-  //- Child
-  //------------------------------------------------
-  template(v-else)
-    //- content
-    .itemListChild__content(@click.prevent="$emit('onClickContent', category)")
-      .itemListChild__icon(@click.prevent.stop="onClickIcon()")
-        .icon(
-          :class="{ _link: view !== 'trnForm' }"
-          :style="`background: ${category.color}`"
-        )
-          .icon__pic: div(:class="category.icon")
-
-      .itemListChild__name {{ category.name }}
-
-      template(v-if="view !== 'trnForm'")
-        .itemListChild__actions
-          .itemListChild__action(
-            v-if="editCategoryId === category.id"
-            @click.prevent.stop="$emit('toogleEditCategory', category.id)")
-            .fa.fa-times-circle
-
-          .itemListChild__action(
-            v-if="editCategoryId !== category.id"
-            @click.prevent.stop="$emit('toogleEditCategory', category.id)")
-            .fa.fa-pencil-square-o
-
-          .itemListChild__action(@click.prevent.stop="$emit('confirmPop', category.id)")
-            .fa.fa-trash-o
-
-    //- Confirm
-    template(v-if="confirmPopCategoryId === category.id")
-      slot(name="confirm")
-</template>
-
 <script>
-import { mapGetters } from 'vuex'
+import Icon from '@components/icon/Icon'
+import CategoryItem from '@components/categories/CategoryItem'
+import ModalBottom from '@components/modal/ModalBottom'
+
 export default {
+  name: 'CategoryItem',
+
+  components: {
+    Icon,
+    CategoryItem,
+    ModalBottom
+  },
+
   props: {
-    view: {
+    id: {
       type: String,
-      default: 'page'
-    },
-    category: {
-      type: Object,
-      required: true
-    },
-    confirmPopCategoryId: {
-      type: [Number, Boolean, String],
-      required: true
-    },
-    showedChildIds: {
-      type: Array,
       required: true
     }
   },
 
+  data: () => ({
+    isShowChild: false
+  }),
+
   computed: {
-    ...mapGetters(['getFilter', 'isMobile']),
-    editCategoryId() {
-      if (this.$store.state.categories.editCategory) {
-        return this.$store.state.categories.editCategory.id
-      } else {
-        return false
-      }
+    category() {
+      return this.$store.state.categories.categories[this.id]
     },
-    className() {
-      return {
-        itemList: this.category.parentId === 0,
-        itemListChild: this.category.parentId !== 0,
-        _editable: (this.$store.state.categories.editCategory && this.$store.state.categories.editCategory.id === this.category.id) || (this.getFilter.category && this.getFilter.category.id === this.category.id),
-        _link: this.view === 'trnForm' || (this.category.child && this.category.child.length && this.editCategoryId !== this.category.id),
-        _delete: this.confirmPopCategoryId === this.category.id,
-        _open: this.showedChildIds.indexOf(this.category.id) !== -1
-      }
+
+    childCategoriesIds() {
+      return this.getChildCategoriesIdsByParentId(this.id)
     }
   },
 
   methods: {
-    onClickIcon() {
-      this.$emit('onClickIcon', this.category)
-      if (this.isMobile) this.$store.commit('toogleCategoriesList', 'hide')
+    getChildCategoriesIdsByParentId(parentId) {
+      // console.log('categoryItem: getChildCategoriesIdsByParentId')
+      if (this.category.parentId === 0) {
+        return [...this.$store.getters.categoriesChildIds]
+          .filter(key => this.$store.state.categories.categories[key].parentId === parentId)
+          .sort((a, b) => {
+            if (this.$store.state.categories.categories[a].name < this.$store.state.categories.categories[b].name) return -1
+            if (this.$store.state.categories.categories[a].name > this.$store.state.categories.categories[b].name) return 1
+            return 0
+          })
+      }
+      return []
+    },
+
+    onClickCategory(categoryId) {
+      // Parent category does not return categoryId
+      if (this.childCategoriesIds.length && !categoryId) {
+        this.isShowChild = true
+        return
+      }
+
+      if (this.$listeners.onClickCategory) {
+        this.$listeners.onClickCategory(categoryId || this.id)
+        this.isShowChild = false
+      }
     }
   }
 }
 </script>
+
+<template lang="pug">
+.categoryItem(
+  @click="onClickCategory()"
+  :style="{ background: category && category.color }"
+)
+  template(v-if="category")
+    .categoryItem__icon
+      Icon(
+        :icon="category.icon"
+        :background="category.color"
+        :round="true"
+      )
+    .categoryItem__content
+      .categoryItem__content-name {{ category.name }}
+      template(v-if="childCategoriesIds.length")
+        .categoryItem__content-child
+          .mdi.mdi-chart-bubble
+          | {{ childCategoriesIds.length }}
+
+    slot()
+
+    ModalBottom(
+      :isShow="isShowChild"
+      :showOverflow="true"
+      v-on:onClose="isShowChild = false"
+    )
+      template(v-if="isShowChild")
+        template(slot="header")
+          .modalBottom__header
+            .modalBottom__name {{ category.name }}
+            template(v-if="childCategoriesIds.length")
+              .modalBottom__child
+                .mdi.mdi-chart-bubble
+                | {{ childCategoriesIds.length }}
+            .modalBottom__icon
+              Icon(
+                :icon="category.icon"
+                :big="true"
+                :round="true"
+                :background="category.color"
+              )
+
+        template(slot="content")
+          .categoriesListIcons
+            template(v-for="categoryId of childCategoriesIds")
+              CategoryItem(
+                :id="categoryId"
+                v-on:onClickCategory="onClickCategory"
+              )
+</template>

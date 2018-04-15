@@ -1,0 +1,45 @@
+.amount
+  typo-money()
+
+  &__wrap
+    display flex
+    flex-flow row nowrap
+    justify-content flex-end
+
+    &._small
+      margin-top 3px
+
+  &._expenses
+    color var(--color-expenses)
+
+  &._incomes
+    color var(--color-incomes)
+
+  &__price
+    &:first-child
+      margin-right $m3
+
+    &:last-child
+      margin-left $m3
+
+    &._small
+      color var(--c-text-main-dim)
+      font-size 14px
+
+    ^[0]._invert &
+      color var(--cat-color-second)
+
+  &__symbol
+    margin-top 3px
+    font-primary()
+    font-size 14px
+    font-weight normal
+
+    &._small
+      margin-top 1px
+      color var(--c-text-main-dim)
+      font-size 12px
+
+    ^[0]._invert &
+      color var(--cat-color-second)
+      opacity .9

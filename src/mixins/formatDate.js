@@ -1,14 +1,9 @@
-import moment from 'moment'
+import { formatDate } from '@/utils/formatDate'
 
-const mixin = {
+export default {
   methods: {
-    formatDate(date, params) {
-      if (params) {
-        return moment(date).format(params)
-      }
-      return moment(date).format('D MMMM')
+    formatDate(value, type) {
+      return formatDate(value, type)
     }
   }
 }
-
-export default mixin

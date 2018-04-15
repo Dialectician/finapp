@@ -3,7 +3,11 @@ import getters from '@/store/modules/views/getters'
 import mutations from '@/store/modules/views/mutations'
 
 const state = {
-  mobileDashboardActiveTab: 'summary'
+  appWidth: null,
+  mobileDashboardActiveTab: 'stat',
+  theme: 'light',
+  walletsWidgetShow: false,
+  trnItemModalId: null
 }
 
 export default {

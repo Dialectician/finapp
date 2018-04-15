@@ -1,0 +1,55 @@
+*
+  boxsizing-borderbox()
+  &:focus
+    outline 0
+
+html
+  height 100%
+  -ms-text-size-adjust 100%
+  -webkit-text-size-adjust 100%
+  -webkit-font-smoothing antialiased
+  -moz-osx-font-smoothing grayscale
+  font-size 16px
+
+.body
+  overflow-y scroll
+  height 100%
+  margin 0
+  color var(--color-main)
+  font-primary()
+  line-height 1
+  letter-spacing 0
+  background var(--main-bg)
+  user-select none
+  scrollbar()
+
+  &._overflow
+    overflow hidden
+
+.app
+  min-height 100%
+  min-width 320px
+
+.main
+  position relative
+  display flex
+  flex-flow column
+  min-height 100vh
+  padding-top 56px
+  padding-bottom 66px
+
+.mainCenter
+  display flex
+  padding-top 56px
+  height 100vh
+
+  & > div
+    flex-grow 1
+
+.mainTop
+  z-index 2
+  position fixed
+  left 0
+  top 56px
+  width 100%
+  background var(--main-bg)

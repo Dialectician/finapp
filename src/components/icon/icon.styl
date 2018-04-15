@@ -1,0 +1,62 @@
+.icon
+  display flex
+  align-items center
+  justify-content center
+  width 38px
+  height 38px
+  color var(--color-icon-color)
+  background var(--color-icon-bg)
+  border-radius 3px
+
+  @media $media-laptop
+    width 32px
+    height 32px
+
+  &._big
+    width 48px
+    height 48px
+  
+  &._invert
+    color var(--color-icon-color-invert)
+    background var(--color-icon-bg-invert)
+
+  &._round
+    border-radius 50%
+
+  &._small
+    width 20px
+    height 20px
+
+  &__image
+    .fa
+      font-size 16px
+
+      @media $media-laptop
+        font-size 14px
+
+      ^[0]._big &
+        font-size 22px
+
+    .mdi
+      font-size 20px
+
+      @media $media-laptop
+        font-size 18px
+
+      ^[0]._big &
+        font-size 24px
+
+  &__abbr
+    font-size 14px
+
+    @media $media-laptop
+      font-size 13px
+
+    ^[0]._big &
+      font-size 18px
+    
+    ^[0]._small &
+      font-size 12px
+
+      @media $media-laptop
+        font-size 11px

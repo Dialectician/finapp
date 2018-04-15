@@ -1,0 +1,59 @@
+// Fonts
+font-primary()
+  font-family 'Roboto', sans-serif
+
+font-secondary()
+  font-family 'Unica One', 'Roboto', sans-serif
+
+// Sizes
+$font-size-icon = 22px
+$font-size-nb = 28px
+$font-size-biggest = 38px
+
+// Types
+typo-appName(small = false)
+  font-primary()
+  color var(--color-main)
+  font-size $font-size-biggest
+  font-weight 500
+  line-height $font-size-biggest
+  if small == 'small'
+    font-size $font-size-nb
+
+typo-btn($color = var(--color-main))
+  color $color
+  font-size 16px
+  font-weight bold
+
+typo-money()
+  color var(--color-main)
+  font-size 18px
+  font-weight bold
+  white-space nowrap
+  font-secondary()
+
+typo-notification()
+  color var(--color-white)
+  font-size 14px
+  line-height 18px
+
+typo-notification-title()
+  typo-notification()
+  font-weight 600
+
+typo-header()
+  margin 0
+  color var(--color-main)
+  font-size $font-size-nb
+  font-weight 600
+  letter-spacing 1px
+  text-transform uppercase
+  font-secondary()
+
+typo-header-normal()
+  margin 0
+  color var(--color-main)
+  font-size 24px
+  font-weight 500
+  text-transform uppercase
+  font-secondary()

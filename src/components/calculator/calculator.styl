@@ -1,0 +1,39 @@
+.calculator
+  display grid
+  grid-template-columns repeat(5, minmax(10px, 1fr))
+  grid-template-rows repeat(4, minmax(10px, 1fr))
+  margin-left -1px
+  border-bottom 1px solid var(--trnForm-calculator-border)
+
+  &__el
+    display flex
+    align-items center
+    justify-content center
+    padding $m7
+    border 1px solid var(--trnForm-calculator-border)
+    border-bottom 0
+    border-right 0
+    font-size 22px
+    anim-all()
+
+    &._act
+      background var(--trnForm-calculator-bg-1)
+
+    &._clear
+      background var(--trnForm-calculator-bg-2)
+
+    &._sum
+      grid-column 5 / 6
+      grid-row 3 / -1
+      border-color transparent
+      font-size 40px
+      color var(--trnForm-action-color)
+
+      &._expenses
+        background var(--color-expenses)
+
+      &._incomes
+        background var(--color-incomes)
+
+    &:active
+      background var(--color-grey)

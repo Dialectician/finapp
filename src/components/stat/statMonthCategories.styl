@@ -1,0 +1,59 @@
+.statMonthCategories
+  position relative
+  overflow hidden
+  overflow-x auto
+  display flex
+  align-items flex-end
+  scrollbar()
+
+  &:after
+    content ""
+    flex 0 0 $m7
+    height 100px
+
+.statMonthCategoriesItem
+  flex 0 0 5vh
+  min-width 40px
+  text-align center
+  color var(--cat-color-main)
+  margin-right $m3
+
+  &:first-child
+    margin-left $m8
+
+  &__bg
+    margin-bottom -1px
+    position relative
+    height 100px
+    background alpha(black, .02)
+
+    &__in
+      position absolute
+      left 0
+      bottom 0
+      width 100%
+      border-radius $m3 $m3 0 0
+
+  &__sum
+    position absolute
+    left 0
+    top 0
+    width 100%
+    padding $m5
+    text-align center
+    font-size 12px
+
+  &__content
+    height 66px
+    padding $m5 $m4
+    padding-top $m9
+
+  &__icon
+    padding 0
+    padding-bottom $m5
+
+  &__name
+    padding $m1 0
+    overflow hidden
+    white-space nowrap
+    font-size 9px

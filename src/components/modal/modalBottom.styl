@@ -1,0 +1,56 @@
+.modalBottom
+  z-index 3
+  position fixed
+  left 0
+  bottom 0
+  width 100%
+  height auto
+
+  &__overflow
+    position fixed
+    left 0
+    bottom 0
+    width 100%
+    height 100%
+    background var(--modal-overflow-bg)
+
+  &__wrap
+    max-width 420px
+    margin-left auto
+    position relative
+    flex-grow 1
+    display flex
+    flex-flow column nowrap
+    background var(--main-bg)
+
+  &__scroll
+    flex-grow 1
+    height 100%
+    overflow hidden
+    overflow-y auto
+    padding $m8 0
+    scrollbar()
+
+  &__header
+    position relative
+    padding $m8
+    background var(--modal-background-1)
+    border-bottom 1px solid var(--modal-border-1)
+
+  &__icon
+    position absolute
+    right $m7
+    top (- $mn1)
+
+  &__name
+    font-size 20px
+    color var(--color-main)
+
+  &__amount
+    display inline-flex
+
+  &__child
+    display flex
+    align-items center
+    padding-top $m5
+    color var(--c-text-main-dim)

@@ -15,12 +15,9 @@ module.exports = merge(baseWebpackConfig, {
   output: {
     path: paths.js.output,
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: ''
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: '"development"' }
-    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new FriendlyErrorsPlugin(),

@@ -1,226 +1,80 @@
 import localforage from 'localforage'
+import {
+  createIdForTrn,
+  formatTrnForDb,
+  saveTrnToOfflineList,
+  addOrUpdateTrnToLocalStorage,
+  removeTrnFromOfflineAddedTrnsLocalStore
+} from '@/store/modules/trns/utils'
 import { db } from '@/store/firebase'
-import { formatTrnForDb, formatTrnForStore } from '@/store/modules/trns/utils'
-
-const saveTrnToOfflineList = async (trn) => {
-  let addedOfflineTrns = await localforage.getItem('addedOfflineTrns')
-  await localforage.setItem('addedOfflineTrns',
-    addedOfflineTrns
-      ? { [trn.id]: trn, ...addedOfflineTrns }
-      : { [trn.id]: trn }
-  )
-}
-
-const saveTrnToLocalCache = async (trn) => {
-  const localTrns = await localforage.getItem('trns')
-  await localforage.setItem('trns',
-    localTrns && localTrns.length
-      ? [trn, ...localTrns]
-      : [trn]
-  )
-}
-
-const removeTrnFromOfflineList = async (trn) => {
-  const addedOfflineTrns = await localforage.getItem('addedOfflineTrns')
-  if (addedOfflineTrns) {
-    delete addedOfflineTrns[trn.id]
-    await localforage.setItem('addedOfflineTrns',
-      addedOfflineTrns ? { ...addedOfflineTrns } : {}
-    )
-  }
-}
 
 export default {
-  // Put all trns to store
-  // ---------------------------------------------------------------------------
-  async setTrns({ commit, state, rootState }, data) {
-    if (data && data.trns) {
-      try {
-        const trns = data.trns
-        const rates = rootState.rates.all
-        const accounts = rootState.accounts.all
-        const categories = rootState.categories.all
-        const formatedTrns = []
-        for (const key in trns) {
-          const trn = {
-            id: key,
-            ...trns[key]
-          }
-          const formatedTrn = formatTrnForStore(trn, { accounts, categories, rates })
-          formatedTrns.push({
-            ...formatedTrn,
-            id: key
-          })
-        }
-        commit('setTrns', formatedTrns)
-      } catch (error) {
-        throw new Error(error.message)
-      }
-    } else {
-      commit('setTrns', [])
-    }
-  },
-
-  // Add trn
-  // ---------------------------------------------------------------------------
-  async addTrn({ commit, state, rootState }, values) {
+  // Add or Update
+  async addOrUpdateTrn({ commit, rootState }, payload) {
     const result = {
       status: null,
       error: null
     }
     try {
-      const formatedTrn = formatTrnForDb(values)
-      const accounts = rootState.accounts.all
-      const categories = rootState.categories.all
-      const rates = rootState.rates.all
-
-      // Save to local storage
-      const formatedTrnForStore = formatTrnForStore(formatedTrn, {
-        accounts, categories, rates
-      })
-      saveTrnToOfflineList(formatedTrn)
-      saveTrnToLocalCache(formatedTrn)
-      commit('addTrn', formatedTrnForStore)
-
-      // Online
-      if (rootState.isConnected) {
-        result.status = 'online'
-        result.error = null
-        db
-          .ref(`users/${rootState.user.user.uid}/trns/${formatedTrn.id}`)
-          .set(formatedTrn)
-          .then(removeTrnFromOfflineList(formatedTrn))
+      const formatedTrnValues = formatTrnForDb(payload.data)
+      const id = payload.id ? payload.id : createIdForTrn(this.date)
+      saveTrnToOfflineList({ id, data: formatedTrnValues })
+      addOrUpdateTrnToLocalStorage({ id, data: formatedTrnValues })
+      if (payload.id) {
+        console.log('up1')
+        commit('updateTrnToStore', { id, data: formatedTrnValues })
+      } else {
+        commit('addTrnToStore', { id, data: formatedTrnValues })
       }
 
-      // Offline
-      if (!rootState.isConnected) {
+      if (rootState.appConnected) {
+        result.status = 'online'
+        result.error = null
+        db.ref(`users/${rootState.user.user.uid}/trns/${id}`)
+          .set(formatedTrnValues)
+          .then(removeTrnFromOfflineAddedTrnsLocalStore(id))
+      } else {
         result.status = 'offline'
         result.error = null
       }
-    } catch (error) {
-      console.error(error)
+      return result
+    } catch (e) {
+      console.error(e)
       result.status = 'error'
-      result.error = error.message
+      result.error = e.message
       return result
     }
-    return result
   },
 
-  // Update trn
-  // ---------------------------------------------------------------------------
-  async updateTrn({ commit, state, rootState }, values) {
-    const result = {
-      status: null,
-      error: null
-    }
-    try {
-      const formatedTrn = formatTrnForDb(values)
-      const accounts = rootState.accounts.all
-      const categories = rootState.categories.all
-      const rates = rootState.rates.all
-
-      // Online
-      if (rootState.isConnected) {
-        await db
-          .ref(`users/${rootState.user.user.uid}/trns/${formatedTrn.id}`)
-          .update(formatedTrn)
-
-        const updatedOfflineTrns = await localforage.getItem('updatedOfflineTrns')
-        if (updatedOfflineTrns) {
-          delete updatedOfflineTrns[formatedTrn.id]
-          await localforage.setItem('updatedOfflineTrns',
-            updatedOfflineTrns ? { ...updatedOfflineTrns } : {}
-          )
-        }
-
-        result.status = 'online'
-        result.error = null
-      }
-
-      // Offline
-      if (!rootState.isConnected) {
-        const formatedTrnForStore = formatTrnForStore(formatedTrn, {
-          accounts, categories, rates
-        })
-
-        let updatedOfflineTrns = await localforage.getItem('updatedOfflineTrns')
-        await localforage.setItem('updatedOfflineTrns',
-          updatedOfflineTrns
-            ? { [formatedTrn.id]: formatedTrn, ...updatedOfflineTrns }
-            : { [formatedTrn.id]: formatedTrn }
-        )
-
-        const localTrns = await localforage.getItem('trns')
-        await localforage.setItem('trns',
-          localTrns && localTrns.length
-            ? [formatedTrnForStore, ...localTrns.filter(trnId => trnId !== formatedTrnForStore.id)]
-            : [formatedTrnForStore]
-        )
-
-        commit('updateTrn', formatedTrnForStore)
-        result.status = 'offline'
-        result.error = null
-      }
-    } catch (error) {
-      console.error(error)
-      result.status = 'error'
-      result.error = error.message
-      return result
-    }
-    return result
+  // Add trns to store
+  async addOrUpdateTrnsToStore({ commit, state }, trns) {
+    commit('addOrUpdateTrnsToStore', trns || {})
+    localforage.setItem('trns', trns || {})
   },
 
-  // Delete trn
-  // ---------------------------------------------------------------------------
+  // Delete
   async deleteTrn({ commit, rootState }, id) {
-    const result = {
-      status: null,
-      error: null
-    }
-    try {
-      // Online
-      if (rootState.isConnected) {
-        const trnRef = db.ref(`users/${rootState.user.user.uid}/trns/${id}`)
-        await trnRef.remove()
+    const trnsOfflineDeleted = await localforage.getItem('trnsOfflineDeleted') || []
+    await localforage.setItem('trnsOfflineDeleted', [
+      ...trnsOfflineDeleted,
+      id
+    ])
 
-        const deletedOfflineTrns = await localforage.getItem('deletedOfflineTrns')
-        if (deletedOfflineTrns && deletedOfflineTrns.length) {
-          await localforage.setItem('deletedOfflineTrns',
-            deletedOfflineTrns.filter(trnId => trnId !== id)
+    const localTrns = await localforage.getItem('trns') || {}
+    delete localTrns[id]
+    await localforage.setItem('trns', { ...localTrns })
+
+    commit('delereTrnFromStore', id)
+
+    await db.ref(`users/${rootState.user.user.uid}/trns/${id}`)
+      .remove()
+      .then(async () => {
+        const trnsOfflineDeleted = await localforage.getItem('trnsOfflineDeleted') || {}
+        if (trnsOfflineDeleted && trnsOfflineDeleted.length) {
+          await localforage.setItem('trnsOfflineDeleted',
+            trnsOfflineDeleted.filter(trnId => trnId !== id)
           )
         }
-
-        result.status = 'online'
-        result.error = null
-      }
-
-      // Offline
-      if (!rootState.isConnected) {
-        console.log('offline')
-        const deletedOfflineTrns = await localforage.getItem('deletedOfflineTrns')
-        await localforage.setItem('deletedOfflineTrns',
-          (deletedOfflineTrns && deletedOfflineTrns.length)
-            ? [id, ...deletedOfflineTrns]
-            : [id]
-        )
-
-        const localTrns = await localforage.getItem('trns')
-        if (localTrns && localTrns.length) {
-          await localforage.setItem('trns',
-            localTrns.filter(trn => trn.id !== id)
-          )
-        }
-
-        commit('deleteTrn', id)
-        result.status = 'offline'
-        result.error = null
-      }
-    } catch (error) {
-      console.error(error)
-      result.status = 'error'
-      result.error = error.message
-      return result
-    }
-    return result
+      })
   }
 }

@@ -1,0 +1,27 @@
+.dashboard
+  flex-grow 1
+
+  &__scroll
+    overflow hidden
+    overflow-y scroll
+    height calcMinus(100vh, 56px)
+    scrollbar()
+
+  &__wrap
+    padding $mb1 $m9
+
+.flex
+  display flex
+  flex-flow column wrap
+
+  @--group-border $media-pc
+    flex-flow row wrap
+
+  &__item
+    &:first-child
+      flex-grow 1
+      margin-right $m9
+      margin-bottom $m9
+
+    &:last-child
+      flex-grow 0

@@ -1,0 +1,43 @@
+.tabs
+  position relative
+  overflow hidden
+  padding-bottom 60px
+
+.tab
+  display flex
+  flex-flow column wrap
+  flex-grow 1
+  padding $m8 0
+
+  & > div
+    flex-grow 1
+
+  &__center
+    flex-grow 1
+    display flex
+    flex-flow column nowrap
+    min-height 100%
+    align-items center
+    justify-content center
+
+    &._jc_s
+      justify-content flex-start
+
+  &__wrap
+    display flex
+    flex-flow column nowrap
+    flex-grow 1
+
+  &__emptyImage
+    margin-bottom 32px
+    font-size 66px
+    color var(--color-incomes)
+
+    @media $media-laptop
+      font-size @font-size * 1.5
+
+  &__emptyText
+    margin-bottom 38px
+
+    &:last-child
+      margin-bottom 0
