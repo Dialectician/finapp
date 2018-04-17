@@ -5,7 +5,11 @@ export default {
   */
   trnsIds(state) {
     // console.log('trnsGetters: trnsIds')
-    return Object.keys(state.trns).filter(trnId => state.trns[trnId] && state.trns[trnId].amount)
+    return Object.keys(state.trns)
+  },
+
+  getTrnById: (state) => (trnId) => {
+    return state.trns[trnId]
   },
 
   sortedTrnsIds(state, getters) {

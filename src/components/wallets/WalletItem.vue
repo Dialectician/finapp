@@ -29,19 +29,19 @@ export default {
 
     walletAmount() {
       let total = 0
-      // const trnsIds = this.$store.getters.trnsIds
-      // const trns = this.$store.state.trns.trns
-      // if (!trnsIds.length) return 0
-      // const walletTrnsIds = trnsIds
-      //   .filter(key => trns[key].accountId === this.id)
+      const trnsIds = this.$store.getters.trnsIds
+      const trns = this.$store.state.trns.trns
+      if (!trnsIds.length) return 0
+      const walletTrnsIds = trnsIds
+        .filter(key => trns[key].accountId === this.id)
 
-      // for (const trnId of walletTrnsIds) {
-      //   if (trns[trnId].type === 0) {
-      //     total = total - trns[trnId].amount
-      //   } else {
-      //     total = total + trns[trnId].amount
-      //   }
-      // }
+      for (const trnId of walletTrnsIds) {
+        if (trns[trnId].type === 0) {
+          total = total - trns[trnId].amount
+        } else {
+          total = total + trns[trnId].amount
+        }
+      }
 
       return total
     }

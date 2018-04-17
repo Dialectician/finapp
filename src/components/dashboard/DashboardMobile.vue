@@ -31,7 +31,7 @@ export default {
 .tabs
   //- Wallets
   .tab(v-show="mobileDashboardActiveTab === 'wallets'")
-    //- WalletsList
+    WalletsList
 
   //- Categories
   .tab(v-show="mobileDashboardActiveTab === 'categories'")

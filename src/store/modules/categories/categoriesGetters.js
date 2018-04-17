@@ -76,9 +76,11 @@ export default {
 
       const sortedLastCategoriesIds = [...lastCategoriesIds]
         .sort((a, b) => {
-          if (state.categories[a].name < state.categories[b].name) return -1
-          if (state.categories[a].name > state.categories[b].name) return 1
-          return 0
+          if (state.categories[a] && state.categories[b]) {
+            if (state.categories[a].name < state.categories[b].name) return -1
+            if (state.categories[a].name > state.categories[b].name) return 1
+            return 0
+          }
         })
       return sortedLastCategoriesIds
     }

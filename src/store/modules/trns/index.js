@@ -3,8 +3,7 @@ import getters from '@/store/modules/trns/trnsGetters'
 import mutations from '@/store/modules/trns/mutations'
 
 const state = {
-  trns: {},
-  all: []
+  trns: {}
 }
 
 export default {
